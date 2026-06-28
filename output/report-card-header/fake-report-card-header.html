@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crescent Heights High School - Report Card</title>
+  <style>
+    :root {
+      --ink: #222426;
+      --title: #3f4245;
+      --line: #000000;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ffffff;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      /* extra right padding nudges the centered report a little to the left */
+      padding: 16px 200px 16px 16px;
+    }
+
+    .page {
+      width: 1450px;
+      max-width: 1450px;
+      margin: 0 auto;
+      background: white;
+      padding: 0;
+      /* zoomed out + centered on the page (sheet placement) */
+      zoom: 0.5;
+    }
+
+    /* ---------- School header box ---------- */
+    .school-header {
+      min-height: 152px;
+      border: 4px solid var(--line);
+      border-radius: 15px;
+      display: grid;
+      grid-template-columns: 190px 1fr 300px;
+      align-items: center;
+      padding: 14px 26px 12px;
+    }
+
+    .board {
+      justify-self: start;
+      align-self: center;
+    }
+
+    .board img {
+      display: block;
+      width: 150px;
+      height: auto;
+    }
+
+    .details {
+      text-align: center;
+      align-self: center;
+    }
+
+    .details h1 {
+      margin: 0 0 11px;
+      font-size: 40px;
+      line-height: 0.98;
+      font-style: italic;
+      font-weight: 800;
+      letter-spacing: 0;
+      color: var(--title);
+    }
+
+    .details p {
+      margin: 0 0 2px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 500;
+    }
+
+    .details strong {
+      font-weight: 800;
+    }
+
+    .website {
+      margin-top: 11px !important;
+      font-size: 22px;
+    }
+
+    /* ---------- Student info box ---------- */
+    .student-box {
+      margin-top: 10px;
+      border: 4px solid var(--line);
+      border-radius: 15px;
+      padding: 12px 28px 14px;
+    }
+
+    .rc-date {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 24px;
+    }
+
+    .student-grid p {
+      margin: 0 0 4px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .student-grid .col-right {
+      align-self: start;
+    }
+
+    .student-grid strong {
+      font-weight: 800;
+    }
+
+    /* ---------- Course sections ---------- */
+    .course {
+      margin-top: 16px;
+    }
+
+    .course-box {
+      border: 2px solid #2b2b2b;
+    }
+
+    .course-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: #d9d9d9;
+      border-bottom: 2px solid #2b2b2b;
+      padding: 8px 18px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .course-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 6px 16px 8px 18px;
+    }
+
+    .teacher {
+      font-size: 22px;
+      padding-top: 8px;
+    }
+
+    .teacher strong {
+      font-weight: 700;
+    }
+
+    .marks {
+      border-collapse: collapse;
+      font-size: 20px;
+    }
+
+    .marks td {
+      border: 1px solid #2b2b2b;
+      padding: 7px 0;
+      text-align: center;
+      width: 90px;
+    }
+
+    .marks .mlbl {
+      border: none;
+      width: auto;
+      text-align: right;
+      font-weight: 700;
+      padding: 5px 12px 5px 0;
+      white-space: nowrap;
+    }
+
+    .marks .mhead {
+      font-weight: 700;
+    }
+
+    .marks .empty {
+      background: #c9c9c9;
+    }
+
+    .reports {
+      padding-top: 2px;
+    }
+
+    .report {
+      margin: 14px 0 0 12px;
+      border-left: 4px solid #c9c9c9;
+      padding: 2px 0 2px 10px;
+    }
+
+    .report-title {
+      margin: 0 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .report-text {
+      padding-left: 22px;
+      font-size: 22px;
+    }
+
+    .report-text p {
+      margin: 0 0 14px;
+      line-height: 1.35;
+    }
+
+    .report-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .report-text .lbl {
+      margin-bottom: 0;
+    }
+
+    /* ---------- Attendance summary ---------- */
+    .attendance {
+      margin-top: 22px;
+    }
+
+    .att-title {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--title);
+    }
+
+    .att-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 22px;
+    }
+
+    .att-table th,
+    .att-table td {
+      border: 1px solid #6b6b6b;
+      padding: 5px 12px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    .att-table th {
+      background: #dcdcdc;
+      font-weight: 700;
+    }
+
+    .att-table .att-course {
+      width: 24%;
+    }
+
+    .att-table td.att-course {
+      text-align: left;
+    }
+
+    .att-table .att-total td {
+      font-weight: 700;
+    }
+
+    .att-note {
+      margin: 9px 0 0;
+      text-align: center;
+      font-size: 18px;
+      color: #555555;
+    }
+
+    .cut-line {
+      width: 84%;
+      height: 3px;
+      margin: 20px auto 4px;
+      background: repeating-linear-gradient(to right,
+        #9a9a9a 0 14px, transparent 14px 24px);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+
+      .page {
+        width: 100%;
+        padding: 4px 6px 0;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 4px;
+      }
+
+      .school-header {
+        grid-template-columns: 130px 1fr;
+        min-height: 138px;
+        padding: 12px 14px;
+      }
+
+      .board img {
+        width: 118px;
+      }
+
+      .details h1 {
+        font-size: 30px;
+      }
+
+      .details p,
+      .website,
+      .rc-date,
+      .student-grid p {
+        font-size: 16px;
+      }
+
+      .student-grid {
+        column-gap: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-label="Report card header">
+
+    <section class="school-header">
+      <div class="board">
+        <img src="cbe-logo.png" alt="Calgary Board of Education">
+      </div>
+
+      <div class="details">
+        <h1>Crescent Heights High School</h1>
+        <p>1019 1 St NW, Calgary, AB T2M 2S2</p>
+        <p>Phone: 403-276-5521</p>
+        <p><strong>Principal: Joel Leavitt</strong></p>
+        <p class="website">Website: www.cbe.ab.ca/CrescentHeights</p>
+      </div>
+    </section>
+
+    <section class="student-box">
+      <p class="rc-date">Report Card Date: June 27, 2026</p>
+
+      <div class="student-grid">
+        <div class="col-left">
+          <p><strong>Yohannes, Yedi Bonsa</strong><span style="margin-left:9px">(1100112580)</span></p>
+          <p><strong>(Legal Name: Yohannes, Yedi Bonsa)</strong></p>
+          <p><strong>Grade: 11</strong></p>
+        </div>
+        <div class="col-right">
+          <p><strong>Alberta Education ID: 304027162</strong></p>
+          <p><strong>Homeroom: J. Kalkman</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="course">
+      <div class="course-box">
+        <div class="course-head">
+          <span class="course-name">Mathematics 20-3&nbsp;&nbsp;(MAT2793 - 24)</span>
+          <span class="course-earned">Earned: 5 / 5</span>
+        </div>
+        <div class="course-row">
+          <div class="teacher"><strong>Teacher(s):</strong>&nbsp; D. Stone</div>
+          <table class="marks">
+            <tr>
+              <td class="mlbl">Report</td>
+              <td class="mhead">1</td>
+              <td class="mhead">2</td>
+              <td class="mhead">3</td>
+              <td class="mhead">4</td>
+            </tr>
+            <tr>
+              <td class="mlbl">Mark</td>
+              <td class="empty"></td>
+              <td class="empty"></td>
+              <td>74</td>
+              <td>76</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="reports">
+        <div class="report">
+          <p class="report-title">Report 3</p>
+          <div class="report-text">
+            <p class="lbl">Areas of Strength:</p>
+            <p>&bull; A proficient level of understanding was demonstrated of graphing and statistics. This was demonstrated through our Unit Assessment where Yedi efficiently solved problems that involve creating and interpreting bar graphs, histograms, line graphs, and circle graphs.</p>
+            <p class="lbl">Areas for Growth:</p>
+            <p>&bull; A developing level of understanding was demonstrated of applying the primary trigonometric ratios to solve problems that involve right triangles. A little more practice and review of these concepts would help Yedi grow in this area.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="course">
+      <div class="course-box">
+        <div class="course-head">
+          <span class="course-name">English Language Arts 20-2&nbsp;&nbsp;(ELA2104 - 37)</span>
+          <span class="course-earned">Earned: 5 / 5</span>
+        </div>
+        <div class="course-row">
+          <div class="teacher"><strong>Teacher(s):</strong>&nbsp; J. McGregor</div>
+          <table class="marks">
+            <tr>
+              <td class="mlbl">Report</td>
+              <td class="mhead">1</td>
+              <td class="mhead">2</td>
+              <td class="mhead">3</td>
+              <td class="mhead">4</td>
+            </tr>
+            <tr>
+              <td class="mlbl">Mark</td>
+              <td>71</td>
+              <td>76</td>
+              <td class="empty"></td>
+              <td class="empty"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="reports">
+        <div class="report">
+          <p class="report-title">Report 1</p>
+          <div class="report-text">
+            <p>This course uses Outcomes-Based Assessment, which shows how well your child understands the main learning goals. Their progress is reported using the CBE proficiency scale, and you will receive summary comments at the end of the semester.</p>
+          </div>
+        </div>
+
+        <div class="report">
+          <p class="report-title">Report 2</p>
+          <div class="report-text">
+            <p>Area of Strength: A developing level of understanding was demonstrated through form, structure and medium. This was demonstrated through the Short Story Unit literary exploration essay where they created text that communicated their ideas clearly and choices supported the intended purpose and audience.</p>
+            <p>Area for Growth: A developing ability to respect, support and collaborate with others was demonstrated. They would benefit from contributing more consistently during seminars and group tasks, actively listening to peers, responding to others&rsquo; ideas with relevant comments or questions, and arriving prepared to share ideas that support group understanding.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="course">
+      <div class="course-box">
+        <div class="course-head">
+          <span class="course-name">Science 10&nbsp;&nbsp;(SCN1270 - 12)</span>
+          <span class="course-earned">Earned: 5 / 5</span>
+        </div>
+        <div class="course-row">
+          <div class="teacher"><strong>Teacher(s):</strong>&nbsp; J. Kalkman</div>
+          <table class="marks">
+            <tr>
+              <td class="mlbl">Report</td>
+              <td class="mhead">1</td>
+              <td class="mhead">2</td>
+              <td class="mhead">3</td>
+              <td class="mhead">4</td>
+            </tr>
+            <tr>
+              <td class="mlbl">Mark</td>
+              <td>79</td>
+              <td>81</td>
+              <td class="empty"></td>
+              <td class="empty"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="reports">
+        <div class="report">
+          <p class="report-title">Report 1</p>
+          <div class="report-text">
+            <p class="lbl">Area of Strength:</p>
+            <p>A proficient level of understanding was demonstrated of Biology. This was demonstrated through their cell organelle, where they successfully applied their understanding of scientific principles to problem solving.</p>
+            <p class="lbl">Area of Growth:</p>
+            <p>An adequate level of understanding was demonstrated of Chemistry. Continue working on study skills, such as breaking down complex processes into smaller, manageable parts, and reviewing key concepts regularly. Seeking help for difficult topics can also improve their understanding.</p>
+          </div>
+        </div>
+
+        <div class="report">
+          <p class="report-title">Report 2</p>
+          <div class="report-text">
+            <p class="lbl">Area of Strength:</p>
+            <p>A proficient level of understanding was demonstrated of the Biosphere. This was demonstrated through their Climate unit assessments, where they successfully applied their understanding of scientific principles to problem solving.</p>
+            <p class="lbl">Area of Growth:</p>
+            <p>An undeveloped level of understanding was demonstrated of Chemical Reactions. Continue working on study skills, such as breaking down complex processes into smaller, manageable parts, and reviewing key concepts regularly. Seeking help for difficult topics can also improve their understanding.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="course">
+      <div class="course-box">
+        <div class="course-head">
+          <span class="course-name">Science 20&nbsp;&nbsp;(SCN2270 - 2)</span>
+          <span class="course-earned">Earned: 5 / 5</span>
+        </div>
+        <div class="course-row">
+          <div class="teacher"><strong>Teacher(s):</strong>&nbsp; D. Hartley</div>
+          <table class="marks">
+            <tr>
+              <td class="mlbl">Report</td>
+              <td class="mhead">1</td>
+              <td class="mhead">2</td>
+              <td class="mhead">3</td>
+              <td class="mhead">4</td>
+            </tr>
+            <tr>
+              <td class="mlbl">Mark</td>
+              <td class="empty"></td>
+              <td class="empty"></td>
+              <td>89</td>
+              <td>87</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="reports">
+        <div class="report">
+          <p class="report-title">Report 3</p>
+          <div class="report-text">
+            <p>Area of Strength:</p>
+            <p>A proficient level of understanding was demonstrated of &ldquo;Investigating aqueous solutions to determine conductivity and to calculate concentration.&rdquo; This was demonstrated through practice problems, lab work and assessment.</p>
+            <p>Area of Growth:</p>
+            <p>A proficient level of understanding was demonstrated of &ldquo;Describing the properties of simple hydrocarbons and describing hydrocarbon-based industrial processes that are important in Alberta.&rdquo; This was demonstrated through diagramming, discussion and debate, and content assessment relative to the petrochemical industry. Further study of the relationships between organic chemicals and their societal applications would improve their ability to successfully understand and address scientific issues.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="course">
+      <div class="course-box">
+        <div class="course-head">
+          <span class="course-name">Social Studies 20-2&nbsp;&nbsp;(SST2772 - 1)</span>
+          <span class="course-earned">Earned: 5 / 5</span>
+        </div>
+        <div class="course-row">
+          <div class="teacher"><strong>Teacher(s):</strong>&nbsp; J. Pelletier</div>
+          <table class="marks">
+            <tr>
+              <td class="mlbl">Report</td>
+              <td class="mhead">1</td>
+              <td class="mhead">2</td>
+              <td class="mhead">3</td>
+              <td class="mhead">4</td>
+            </tr>
+            <tr>
+              <td class="mlbl">Mark</td>
+              <td class="empty"></td>
+              <td class="empty"></td>
+              <td>72</td>
+              <td>77</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="reports">
+        <div class="report">
+          <p class="report-title">Report 3</p>
+          <div class="report-text">
+            <p class="lbl">Area of Strength:</p>
+            <p>A proficient level of understanding was demonstrated in applying thinking strategies. This was demonstrated through their ability to analyze information, make informed connections, and apply learning to new contexts.</p>
+            <p class="lbl">Area of Growth:</p>
+            <p>A beginning level of understanding was demonstrated in exploring the pursuit of national interests. Developing the ability to move beyond description toward explanation of national decision-making would enhance engagement with this strand.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="attendance">
+      <h2 class="att-title">Attendance Summary</h2>
+      <table class="att-table">
+        <tr>
+          <th class="att-course">Course</th>
+          <th>Periods</th>
+          <th>Late</th>
+          <th>Leave Early</th>
+          <th>Absent</th>
+          <th>Absence %</th>
+        </tr>
+        <tr>
+          <td class="att-course">English Language Arts 20-2 (37)</td>
+          <td>76</td><td>5</td><td>14</td><td>7</td><td>9.21</td>
+        </tr>
+        <tr>
+          <td class="att-course">Home room (1108)</td>
+          <td>20</td><td>0</td><td>0</td><td>1</td><td>5.00</td>
+        </tr>
+        <tr>
+          <td class="att-course">Mathematics 20-3 (24)</td>
+          <td>92</td><td>12</td><td>1</td><td>12</td><td>13.04</td>
+        </tr>
+        <tr>
+          <td class="att-course">Science 10 (12)</td>
+          <td>77</td><td>0</td><td>0</td><td>7</td><td>9.09</td>
+        </tr>
+        <tr>
+          <td class="att-course">Science 20 (2)</td>
+          <td>92</td><td>2</td><td>2</td><td>8</td><td>8.70</td>
+        </tr>
+        <tr>
+          <td class="att-course">Social Studies 20-2 (1)</td>
+          <td>92</td><td>2</td><td>6</td><td>14</td><td>15.22</td>
+        </tr>
+        <tr class="att-total">
+          <td class="att-course">TOTAL</td>
+          <td>449</td><td>21</td><td>23</td><td>49</td><td>10.91</td>
+        </tr>
+      </table>
+      <p class="att-note">Attendance is calculated to the day report cards are printed. For a more detailed report, please call the school.</p>
+    </section>
+
+    <div class="cut-line"></div>
+
+  </main>
+</body>
+</html>
