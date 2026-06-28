@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
   <title>Crescent Heights High School - Report Card</title>
   <style>
     :root {
@@ -21,6 +22,8 @@
       background: #ffffff;
       color: var(--ink);
       font-family: Arial, Helvetica, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
       /* extra right padding nudges the centered report a little to the left */
       padding: 16px 200px 16px 16px;
     }
@@ -296,33 +299,20 @@
     }
 
     @media (max-width: 760px) {
+      body {
+        min-height: auto;
+        overflow-x: hidden;
+        padding: 0;
+        position: relative;
+      }
+
       .page {
-        padding: 4px;
-      }
-
-      .school-header {
-        grid-template-columns: 130px 1fr;
-        min-height: 138px;
-        padding: 12px 14px;
-      }
-
-      .board img {
-        width: 118px;
-      }
-
-      .details h1 {
-        font-size: 30px;
-      }
-
-      .details p,
-      .website,
-      .rc-date,
-      .student-grid p {
-        font-size: 16px;
-      }
-
-      .student-grid {
-        column-gap: 14px;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 6px;
+        transform-origin: top left;
       }
     }
   </style>
@@ -621,5 +611,40 @@
     <div class="cut-line"></div>
 
   </main>
+  <script>
+    (() => {
+      const reportWidth = 1450;
+      const sidePadding = 12;
+      const page = document.querySelector('.page');
+
+      const fitReport = () => {
+        if (!page || window.innerWidth > 760) {
+          document.body.style.minHeight = '';
+          if (page) {
+            page.style.transform = '';
+            page.style.marginLeft = '';
+            page.style.zoom = '';
+          }
+          return;
+        }
+
+        const available = Math.max(280, window.innerWidth - sidePadding);
+        const scale = available / reportWidth;
+        const left = Math.max(0, (window.innerWidth - (reportWidth * scale)) / 2);
+
+        page.style.width = `${reportWidth}px`;
+        page.style.maxWidth = `${reportWidth}px`;
+        page.style.zoom = '1';
+        page.style.transform = `scale(${scale})`;
+        page.style.marginLeft = `${left}px`;
+        document.body.style.minHeight = `${Math.ceil(page.offsetHeight * scale) + 18}px`;
+      };
+
+      window.addEventListener('load', fitReport);
+      window.addEventListener('resize', fitReport);
+      window.addEventListener('orientationchange', fitReport);
+      fitReport();
+    })();
+  </script>
 </body>
 </html>
